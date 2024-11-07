@@ -18,9 +18,9 @@ exports.default = (0, knex_1.default)({
     client: 'pg',
     connection: {
         user: 'dwellr',
-        host: 'dwellr.cxldlwaguxam.us-east-1.rds.amazonaws.com',
+        host: '',
         database: 'postgres',
-        password: '29h23d92hu',
+        password: '',
         port: 5432,
         ssl: {
             requestCert: true,
