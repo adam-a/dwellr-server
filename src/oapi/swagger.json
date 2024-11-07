@@ -1,0 +1,313 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"PostMetadata": {
+				"properties": {
+					"utilitiesIncluded": {
+						"type": "boolean"
+					},
+					"location": {
+						"type": "string"
+					},
+					"yard": {
+						"type": "boolean"
+					},
+					"amenities": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"appliancesList": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"kitchen": {
+						"type": "boolean"
+					},
+					"furnished": {
+						"type": "boolean"
+					},
+					"bathroomCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"bedroomCount": {
+						"type": "number",
+						"format": "double"
+					},
+					"generatedDescription": {
+						"type": "string"
+					},
+					"sqft": {
+						"type": "number",
+						"format": "double"
+					},
+					"price": {
+						"type": "number",
+						"format": "double"
+					},
+					"petsAllowed": {
+						"type": "boolean"
+					},
+					"lengthOfLeaseInMonths": {
+						"type": "number",
+						"format": "double"
+					},
+					"leaseAvailabilityDate": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"includesParking": {
+						"type": "boolean"
+					}
+				},
+				"type": "object"
+			},
+			"DescribeRequestBody": {
+				"properties": {
+					"transcript": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"transcript"
+				],
+				"type": "object"
+			},
+			"PresignResponse": {
+				"properties": {
+					"key": {
+						"type": "string"
+					},
+					"presignedUrl": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"key",
+					"presignedUrl"
+				],
+				"type": "object"
+			},
+			"UserPost": {
+				"properties": {
+					"metadata": {
+						"$ref": "#/components/schemas/PostMetadata"
+					},
+					"mediaKey": {
+						"type": "string"
+					},
+					"username": {
+						"type": "string"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"metadata",
+					"mediaKey",
+					"username",
+					"updatedAt",
+					"createdAt",
+					"id"
+				],
+				"type": "object"
+			},
+			"Pick_Post.mediaKey-or-metadata_": {
+				"properties": {
+					"mediaKey": {
+						"type": "string"
+					},
+					"metadata": {
+						"$ref": "#/components/schemas/PostMetadata"
+					}
+				},
+				"required": [
+					"mediaKey",
+					"metadata"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"CreatePostBody": {
+				"$ref": "#/components/schemas/Pick_Post.mediaKey-or-metadata_"
+			}
+		},
+		"securitySchemes": {
+			"magic": {
+				"type": "apiKey",
+				"name": "x-did-token",
+				"in": "header"
+			}
+		}
+	},
+	"info": {
+		"title": "dwellr-server",
+		"version": "1.0.0",
+		"description": "Dwellr Web Server",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {
+			"name": "Adam"
+		}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/api/describe": {
+			"post": {
+				"operationId": "GeneratePostMetadata",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PostMetadata"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"api"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DescribeRequestBody"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/presignedUrl": {
+			"get": {
+				"operationId": "GetPresignedUploadUrl",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/PresignResponse"
+								}
+							}
+						}
+					}
+				},
+				"description": "Post presign",
+				"tags": [
+					"api"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/api/createPost": {
+			"post": {
+				"operationId": "CreatePost",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/UserPost"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"api"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreatePostBody"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/api/getPosts": {
+			"get": {
+				"operationId": "GetPosts",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/UserPost"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"api"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "offset",
+						"required": false,
+						"schema": {
+							"default": 0,
+							"format": "double",
+							"type": "number"
+						}
+					},
+					{
+						"in": "query",
+						"name": "limit",
+						"required": false,
+						"schema": {
+							"default": 5,
+							"format": "double",
+							"type": "number"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}
